@@ -1,21 +1,30 @@
 const express = require("express")
 const cors = require("cors")
-const mongoose = require("mongoose")
 require("dotenv").config()
+const {userController} = require("./Routes/user.route")
 
+const {connection} = require("./config/db")
 const app = express()
 
 
 app.use(cors())
 app.use(express.json())
 
-const server = app.listen(process.env.PORT , async()=>{
+
+app.get("/" , (req,res)=>{
+  res.send("Welcome to home Page Pandey Ji")
+})
+
+app.use("/user" ,userController)
+
+ app.listen(process.env.PORT , async()=>{
   try{
-    await process.env.MONGO_URL
+    await connection
     console.log("connected to DB successfully")
   }
-  catch{
+  catch(err){
     console.log("connecting DB error")
+    console.log(err)
   }
   console.log(`Listening on port ${process.env.PORT}`)
 })

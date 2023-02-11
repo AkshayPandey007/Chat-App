@@ -2,11 +2,16 @@ import React, { useState } from 'react'
 import styles from "../CSS/Register.module.css"
 import chatLogo from "../Assest/chatLogo.jpg"
 import Slay from "../Assest/Saly-10.png"
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios"
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+
+
   const [values, setValues] = useState({
     username: "",
     email: "",
@@ -56,13 +61,21 @@ const Register = () => {
 
 
 
-  const handleSubmit =(e)=>{
+  const handleSubmit =async(e)=>{
     e.preventDefault();
-    handleValidation()
-    // console.log(values)
-  }
+    if(handleValidation()==true)
+    {
+      const { email, username, password } = values;
+      const { data } =await axios.post("https://backend-flax-alpha.vercel.app/user/signup", {username,email,password,});
 
-  // console.log(values)
+      if (data.status === false) {
+        toast.error(data.msg, toastCss);
+      }
+      else{
+        navigate("/login")
+      }
+    }
+    }
   return (
     <div className={styles.RegisterBox}>
 
